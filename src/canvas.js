@@ -9,7 +9,7 @@ function setupCanvas(canvasElement,analyserNodeRef){
 	canvasWidth = canvasElement.width;
 	canvasHeight = canvasElement.height;
 	// create a gradient that runs top to bottom
-	gradient = utils.getLinearGradient(ctx,0,0,0,canvasHeight,[{percent:.9,color:"blue"} , {percent:.4,color:"cyan"},{percent:.39,color:"orange"},{percent:0,color:"darkcyan"}]);
+	gradient = utils.getLinearGradient(ctx,0,0,0,canvasHeight,[{percent:1,color:"cyan"}, {percent:.5,color:"lightskyblue"} ,{percent:0,color:"deepskyblue"}]);
 	// keep a reference to the analyser node
 	analyserNode = analyserNodeRef;
 	// this is the array where the analyser data will be stored
@@ -29,6 +29,14 @@ function draw(params={}){
     ctx.globalAlpha = .1;
     ctx.fillRect(0,0, canvasWidth, canvasHeight);
     ctx.restore();
+
+    // draw dock
+    // ctx.save();
+    // ctx.fillStyle = "saddlebrown";
+    // for(let i = 0; i < 4; i++){
+    //     ctx.fillRect(i* canvasWidth/19, canvasHeight/3, canvasWidth/20, canvasHeight/4);
+    // }
+    // ctx.restore();
 		
     // 3 - draw gradient
     if(params.showGradient){
@@ -41,16 +49,50 @@ function draw(params={}){
 
     
 	// 4 - draw bars
-	if(params.showBars){
+
+	// 5 - draw circles
+	if(params.showRipples){
+        let maxRadius = canvasHeight/2;
+        ctx.save();
+        ctx.globalAlpha = 0.5;
+        ctx.lineWidth = 5;
+        for(let i = 0; i < audioData.length; i++){
+            let percent = audioData[i] / 255;
+
+            let circleRadius = percent * maxRadius;
+            ctx.beginPath();
+            ctx.strokeStyle = utils.makeColor(0, 0, 255, .34 - percent/3.0);
+            ctx.arc(canvasWidth/2, canvasHeight/2, circleRadius, 0, 2 * Math.PI, false);
+            ctx.stroke();
+            ctx.closePath();
+
+            // ctx.beginPath();
+            // ctx.strokeStyle = utils.makeColor(70, 130, 180, .10 - percent/10.0);
+            // ctx.arc(canvasWidth/2, canvasHeight/2, circleRadius * 1.5, 0, 2 * Math.PI, false);
+            // ctx.stroke();
+            // ctx.closePath();
+
+            // ctx.save();
+            // ctx.beginPath();
+            // ctx.strokeStyle = utils.makeColor(65, 105, 225, .5 - percent/5.0);
+            // ctx.arc(canvasWidth/2, canvasHeight/2, circleRadius * .5, 0, 2 * Math.PI, false);
+            // ctx.stroke();
+            // ctx.closePath();
+            // ctx.restore();
+        }
+        ctx.restore();
+    }	
+
+    if(params.showBars){
         let barSpacing = 4; 
         let margin = 5; 
         let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
-        let barWidth = screenWidthForBars / audioData.length;
+        let barWidth = screenWidthForBars / audioData.length * 4;
         let barHeight = 200;
-        let topSpacing = 100;
+        let topSpacing = canvasHeight/4;
 
         ctx.save();
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fillStyle = 'rgba(160,42,42,0.9)';
         ctx.strokeStyle = 'rgba(0,0,0,0.5)';
 
         for(let i = 0; i < audioData.length; i++){
@@ -59,37 +101,6 @@ function draw(params={}){
         }
         ctx.restore();
     }
-	// 5 - draw circles
-	if(params.showSun){
-        let maxRadius = canvasHeight/4.5;
-        ctx.save();
-        ctx.globalAlpha = 0.5;
-        for(let i = 0; i < audioData.length; i++){
-            let percent = audioData[i] / 255;
-
-            let circleRadius = percent * maxRadius;
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(255, 140, 0, .34 - percent/3.0);
-            ctx.arc(canvasWidth/2, canvasHeight/4, circleRadius, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(255, 69, 0, .10 - percent/10.0);
-            ctx.arc(canvasWidth/2, canvasHeight/4, circleRadius * 1.5, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(255, 215, 0, .5 - percent/5.0);
-            ctx.arc(canvasWidth/2, canvasHeight/4, circleRadius * .5, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
-        }
-        ctx.restore();
-    }	
     // 6 - bitmap manipulation
         // TODO: right now. we are looping though every pixel of the canvas (320,000 of them!), 
         // regardless of whether or not we are applying a pixel effect

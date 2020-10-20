@@ -9,23 +9,18 @@ const DEFAULTS = Object.freeze({
 const drawParams = {
   showGradient  :  true,
   showBars      :  true,
-  showSun   :  true,
+  showRipples       :  true,
   showNoise     :  false,
   showInvert    : false,
   showEmboss    : false
 };
 
-function init(){
-  audio.setupWebaudio(DEFAULTS.sound1);
-  let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
-  setupUI(canvasElement);
-  canvas.setupCanvas(canvasElement, audio.analyserNode);
-  loop();
-}
 const controllerObject = {
 
     _track      :  DEFAULTS.sound1,
     _playing    :  "no",
+    _showRipples:  true,
+    _volume     :  50,
 
     set track(value){
         audio.loadSoundFile(value);
@@ -34,6 +29,19 @@ const controllerObject = {
 
     get track(){
         return this._track;
+    },
+
+    set showRipples(value){
+        this._showRipples = value;
+    },
+    
+    set volume(value){
+        this._volume = value;
+        audio.setVolume(this._volume/50);
+    },
+
+    get volume(){
+        return this._volume;
     },
 
     play(){
@@ -53,6 +61,13 @@ const controllerObject = {
 //     gui.add(controllerObject, 'playing').name("Play");
 // }
 
+function init(){
+  audio.setupWebaudio(DEFAULTS.sound1);
+  let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
+  setupUI(canvasElement);
+  canvas.setupCanvas(canvasElement, audio.analyserNode);
+  loop();
+}
 
 function playOrPause(playing) {
     console.log(`audioCtx.state before = ${audio.audioCtx.state}`);
@@ -71,6 +86,9 @@ function playOrPause(playing) {
     }
     return playing;
   }
+function goFullscreen(){
+    utils.goFullscreen(canvasElement);
+}
 
 function setupUI(canvasElement){
   // A - hookup fullscreen button
@@ -79,29 +97,10 @@ function setupUI(canvasElement){
     gui.close();
     gui.add(controllerObject, 'play').name("Play");
 
-    gui.add(controllerObject, 'track', ["./media/TownTheme.mp3"]).name("Track Select");
+    gui.add(controllerObject, 'track', ["./media/TownTheme.mp3", "media/Peanuts Theme.mp3", "media/The Picard Song.mp3"]).name("Track Select");
 
     gui.add(controllerObject, 'fullscreen').name("Full Screen");
-
-  const fsButton = document.querySelector("#fsButton");
-	
-  // add .onclick event to button
-  fsButton.onclick = e => {
-    console.log("init called");
-    utils.goFullscreen(canvasElement);
-  };
-
-
-  let volumeSlider = document.querySelector("#volumeSlider");
-  let volumeLabel = document.querySelector("#volumeLabel");
-
-  volumeSlider.oninput = e => {
-    audio.setVolume(e.target.value);
-    volumeLabel.innerHTML = Math.round((e.target.value/2 * 100));
-  };
-
-  volumeSlider.dispatchEvent(new Event("input"));
-
+    gui.add(controllerObject, 'volume', 0, 100).name("Volume");
 
   let gradientCB = document.querySelector("#gradientCB");
   let barsCB = document.querySelector("#barsCB");
