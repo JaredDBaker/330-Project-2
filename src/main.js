@@ -14,7 +14,7 @@ const drawParams = {
   showInvert    : false,
   showEmboss    : false
 };
-
+//use scales to move leaves back and forth over ripples
 const controllerObject = {
 
     _track      :  DEFAULTS.sound1,
