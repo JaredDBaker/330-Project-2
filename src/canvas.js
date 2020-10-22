@@ -51,7 +51,7 @@ function draw(params={}){
 	// 4 - draw bars
 
 	// 5 - draw circles
-	if(params.showRipples){
+	if(params.showCircles){
         let maxRadius = canvasHeight/2;
         ctx.save();
         ctx.globalAlpha = 0.5;

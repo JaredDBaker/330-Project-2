@@ -9,10 +9,11 @@ const DEFAULTS = Object.freeze({
 const drawParams = {
   showGradient  :  true,
   showBars      :  true,
-  showRipples       :  true,
+  showCircles   :  true,
   showNoise     :  false,
   showInvert    : false,
-  showEmboss    : false
+  showEmboss    : false,
+  showRipples   : true
 };
 //use scales to move leaves back and forth over ripples
 const controllerObject = {
@@ -60,10 +61,10 @@ const controllerObject = {
 //     gui.close();
 //     gui.add(controllerObject, 'playing').name("Play");
 // }
-
+let canvasElement;
 function init(){
   audio.setupWebaudio(DEFAULTS.sound1);
-  let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
+  canvasElement = document.querySelector("canvas"); // hookup <canvas> element
   setupUI(canvasElement);
   canvas.setupCanvas(canvasElement, audio.analyserNode);
   loop();
