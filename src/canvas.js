@@ -1,7 +1,7 @@
 import * as utils from './utils.js';
 
 let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData;
-
+let s, buffer1, buffer2, damping, temp;
 
 function setupCanvas(canvasElement,analyserNodeRef){
 	// create drawing context
@@ -13,7 +13,13 @@ function setupCanvas(canvasElement,analyserNodeRef){
 	// keep a reference to the analyser node
 	analyserNode = analyserNodeRef;
 	// this is the array where the analyser data will be stored
-	audioData = new Uint8Array(analyserNode.fftSize/2);
+    audioData = new Uint8Array(analyserNode.fftSize/2);
+    
+    s = 1;
+    buffer1 = Array(canvasWidth).fill().map(_=>Array(canvasHeight).fill(0));
+    buffer2 = Array(canvasWidth).fill().map(_=>Array(canvasHeight).fill(0));
+    damping = .99;
+
 }
 
 function draw(params={}){
@@ -25,7 +31,7 @@ function draw(params={}){
 	
 	// 2 - draw background
     ctx.save();
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "blue";
     ctx.globalAlpha = .1;
     ctx.fillRect(0,0, canvasWidth, canvasHeight);
     ctx.restore();
@@ -38,7 +44,7 @@ function draw(params={}){
     // }
     // ctx.restore();
 		
-    // 3 - draw gradient
+    //3 - draw gradient
     if(params.showGradient){
         ctx.save();
         ctx.fillStyle = gradient;
@@ -145,8 +151,57 @@ function draw(params={}){
             }
         }
 
-        // D) copy image data back to canvas
         ctx.putImageData(imageData, 0, 0);
+
+        if(params.showRipples){
+            for(let i = 0; i < audioData.length; i++){
+                if(audioData[i] > 150){
+                    buffer1[canvasWidth/2][canvasHeight/2] = 5 *  audioData[i];
+                    animation();
+                }
+            }
+
+            //     buffer1[canvasWidth/2][canvasHeight/2] = 2 *  audioData[10 * i];
+            //     animation();
+
+            //     buffer1[canvasWidth/2][canvasHeight/2] = 1 *  audioData[20 * i];
+            //     animation();
+            // }
+
+        }
+
+        // D) copy image data back to canvas
+  
+}
+
+function animation(){
+    for(let i = 1; i < canvasWidth-1; i++){
+		for(let j = 1; j < canvasHeight-1; j++){
+			buffer2[i][j] = ((buffer1[i-1][j] +
+											 buffer1[i+1][j] +
+											 buffer1[i][j-1] +
+											 buffer1[i][j+1]) / 2 - buffer2[i][j]) * damping;
+		}
+	}
+	
+	let img = new ImageData(canvasWidth, canvasHeight);
+	
+	for(let i = 0; i < buffer1.length; i++){
+		for(let j = 0; j < buffer1[0].length; j++){
+			let index = (j * buffer1.length + i) * 4;
+			img.data[index] = buffer2[i][j];
+			img.data[index+1] = buffer2[i][j];
+			img.data[index+2] = buffer2[i][j];
+			img.data[index+3] = 255;
+		}
+	}
+	
+	ctx.putImageData(img,0,0);
+	
+	temp = buffer2;
+	buffer2 = buffer1;
+    buffer1 = temp;
+    //requestAnimationFrame(animation);
 }
 
 export {setupCanvas,draw};

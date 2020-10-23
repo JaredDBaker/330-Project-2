@@ -50,7 +50,7 @@ const controllerObject = {
     },
 
     fullscreen(){
-        utils.goFullscreen(canvasElement);
+        utils.Fullscreen();
     },
 
 }
@@ -61,10 +61,10 @@ const controllerObject = {
 //     gui.close();
 //     gui.add(controllerObject, 'playing').name("Play");
 // }
-let canvasElement;
+
 function init(){
   audio.setupWebaudio(DEFAULTS.sound1);
-  canvasElement = document.querySelector("canvas"); // hookup <canvas> element
+  let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
   setupUI(canvasElement);
   canvas.setupCanvas(canvasElement, audio.analyserNode);
   loop();
@@ -87,7 +87,7 @@ function playOrPause(playing) {
     }
     return playing;
   }
-function goFullscreen(){
+function Fullscreen(){
     utils.goFullscreen(canvasElement);
 }
 
