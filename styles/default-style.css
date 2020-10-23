@@ -1,6 +1,13 @@
 body{font-family:"serif";
 background-color: whitesmoke;
 }
+
 canvas{
-    opacity: .9;
+    position: absolute;
+    left:0px;
+    top: 0px;
+}
+
+#ripples{
+    opacity: .4;
 }

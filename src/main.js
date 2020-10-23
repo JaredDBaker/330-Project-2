@@ -38,7 +38,7 @@ const controllerObject = {
     
     set volume(value){
         this._volume = value;
-        audio.setVolume(this._volume/50);
+        audio.setVolume(this._volume/60);
     },
 
     get volume(){
@@ -64,9 +64,10 @@ const controllerObject = {
 
 function init(){
   audio.setupWebaudio(DEFAULTS.sound1);
-  let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
+  let canvasElement = document.querySelector("canvas"); 
+  let rippleCanvas = document.querySelector("#ripples");// hookup <canvas> element
   setupUI(canvasElement);
-  canvas.setupCanvas(canvasElement, audio.analyserNode);
+  canvas.setupCanvas(canvasElement, rippleCanvas, audio.analyserNode);
   loop();
 }
 
@@ -98,7 +99,7 @@ function setupUI(canvasElement){
     gui.close();
     gui.add(controllerObject, 'play').name("Play");
 
-    gui.add(controllerObject, 'track', ["./media/TownTheme.mp3", "media/Peanuts Theme.mp3", "media/The Picard Song.mp3"]).name("Track Select");
+    gui.add(controllerObject, 'track', ["./media/TownTheme.mp3", "media/Peanuts Theme.mp3", "media/The Picard Song.mp3", "media/New Adventure Theme.mp3"]).name("Track Select");
 
     gui.add(controllerObject, 'fullscreen').name("Full Screen");
     gui.add(controllerObject, 'volume', 0, 100).name("Volume");
@@ -141,8 +142,6 @@ function setupUI(canvasElement){
 function loop(){
   requestAnimationFrame(loop);
   canvas.draw(drawParams);
-
-
 
 }
 
