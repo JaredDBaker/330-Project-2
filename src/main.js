@@ -38,7 +38,7 @@ const controllerObject = {
     
     set volume(value){
         this._volume = value;
-        audio.setVolume(this._volume/60);
+        audio.setVolume(this._volume/100);
     },
 
     get volume(){

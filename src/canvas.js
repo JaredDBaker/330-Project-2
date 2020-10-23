@@ -99,20 +99,21 @@ function draw(params={}){
             }
         }
 
-
         ctx.putImageData(imageData, 0, 0);
+
         if(params.showRipples){
+            animation();
             for(let i = 0; i < audioData.length; i++){
-                if(audioData[i] > 150){
-                    buffer1[canvasWidth/2][canvasHeight/2] = 20 *  audioData[i];
+                if(audioData[i] > 170){
+                    buffer1[canvasWidth/2][canvasHeight/2] = 60 *  audioData[i];
                     animation();
 
-                    buffer1[canvasWidth/2][canvasHeight/2] = 10 *  audioData[i];
+                    //buffer1[canvasWidth/2][canvasHeight/2] = 20;
                     //animation();
                 }      
 
             }
-            animation();
+
 
             // }
 
@@ -137,8 +138,8 @@ function animation(){
 	for(let i = 0; i < buffer1.length; i++){
 		for(let j = 0; j < buffer1[0].length; j++){
 			let index = (j * buffer1.length + i) * 4;
-			img.data[index] = buffer2[i][j];
-			img.data[index+1] = buffer2[i][j];
+			img.data[index] = buffer2[i][j] - 30;
+			img.data[index+1] = buffer2[i][j] - 30;
 			img.data[index+2] = buffer2[i][j] + 100;
 			img.data[index+3] = 225;
 		}

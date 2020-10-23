@@ -11,3 +11,8 @@ canvas{
 #ripples{
     opacity: .4;
 }
+
+#controls{
+    position: relative;
+    top: 500px;
+}
