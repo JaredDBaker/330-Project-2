@@ -25,15 +25,19 @@ const makeColor = (red, green, blue, alpha = 1) => {
   };
   
   
-  const goFullscreen = (element) => {
+  const goFullscreen = (element, element2) => {
       if (element.requestFullscreen) {
           element.requestFullscreen();
+          element2.requestFullscreen();
       } else if (element.mozRequestFullscreen) {
           element.mozRequestFullscreen();
+          element2.mozRequestFullscreen();
       } else if (element.mozRequestFullScreen) { // camel-cased 'S' was changed to 's' in spec
           element.mozRequestFullScreen();
+          element2.mozRequestFullScreen();
       } else if (element.webkitRequestFullscreen) {
           element.webkitRequestFullscreen();
+          element2.webkitRequestFullscreen();
       }
       // .. and do nothing if the method is not supported
   };

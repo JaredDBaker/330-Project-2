@@ -50,7 +50,7 @@ const controllerObject = {
     },
 
     fullscreen(){
-        utils.Fullscreen();
+        Fullscreen();
     },
 
 }
@@ -61,11 +61,11 @@ const controllerObject = {
 //     gui.close();
 //     gui.add(controllerObject, 'playing').name("Play");
 // }
-
+let canvasElement, rippleCanvas;
 function init(){
   audio.setupWebaudio(DEFAULTS.sound1);
-  let canvasElement = document.querySelector("canvas"); 
-  let rippleCanvas = document.querySelector("#ripples");// hookup <canvas> element
+  canvasElement = document.querySelector("canvas"); 
+  rippleCanvas = document.querySelector("#ripples");// hookup <canvas> element
   setupUI(canvasElement);
   canvas.setupCanvas(canvasElement, rippleCanvas, audio.analyserNode);
   loop();
@@ -89,7 +89,7 @@ function playOrPause(playing) {
     return playing;
   }
 function Fullscreen(){
-    utils.goFullscreen(canvasElement);
+    utils.goFullscreen(canvasElement, rippleCanvas);
 }
 
 function setupUI(canvasElement){
