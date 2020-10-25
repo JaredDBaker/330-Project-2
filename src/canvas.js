@@ -23,7 +23,7 @@ function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
 
 }
 
-function draw(params={}){
+function draw(params={}, sensitivity){
   // 1 - populate the audioData array with the frequency data from the analyserNode
 	// notice these arrays are passed "by reference" 
 	analyserNode.getByteFrequencyData(audioData);
@@ -104,17 +104,21 @@ function draw(params={}){
         if(params.showRipples){
             animation();
             for(let i = 0; i < audioData.length; i++){
-                if(audioData[i] > 170){
+                if(audioData[i] > sensitivity){
                     buffer1[canvasWidth/2][canvasHeight/2] = 60 *  audioData[i];
                     animation();
-
+                    //console.log(audioData[i]);
                     //buffer1[canvasWidth/2][canvasHeight/2] = 20;
                     //animation();
-                }      
-
+                }
             }
 
-
+            if(params.showEmboss){
+                for(let i = 0; i < length; i++){
+                    if(i%4 == 3) continue;
+                    data[i] = 127 + 2*data[i] - data[i+4] - data [i + width * 4];
+                }
+            }
             // }
 
         }

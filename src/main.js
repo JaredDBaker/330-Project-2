@@ -22,6 +22,7 @@ const controllerObject = {
     _playing    :  "no",
     _showRipples:  true,
     _volume     :  50,
+    _sensitivity:  170,
 
     set track(value){
         audio.loadSoundFile(value);
@@ -43,6 +44,14 @@ const controllerObject = {
 
     get volume(){
         return this._volume;
+    },
+
+    set sensitivity(value){
+      this._sensitivity = value;
+    },
+
+    get sensitivity(){
+      return this._sensitivity;
     },
 
     play(){
@@ -103,30 +112,20 @@ function setupUI(canvasElement){
 
     gui.add(controllerObject, 'fullscreen').name("Full Screen");
     gui.add(controllerObject, 'volume', 0, 100).name("Volume");
+    gui.add(controllerObject, 'sensitivity', 100, 250).name("Sensitivity");
 
   let gradientCB = document.querySelector("#gradientCB");
-  let barsCB = document.querySelector("#barsCB");
-  let circlesCB = document.querySelector("#circlesCB");
   let noiseCB = document.querySelector("#noiseCB");
   let invertCB = document.querySelector("#invertCB");
   let embossCB = document.querySelector("#embossCB");
 
   gradientCB.checked = true;
-  barsCB.checked = true;
-  circlesCB.checked = true;
-  noiseCB.checked = true;
+  noiseCB.checked = false;
 
   gradientCB.onchange = e => {
     drawParams.showGradient = gradientCB.checked;
   }
 
-  barsCB.onchange = e => {
-    drawParams.showBars = barsCB.checked;
-  }
-
-  circlesCB.onchange = e => {
-    drawParams.showCircles = circlesCB.checked;
-  }
   noiseCB.onchange = e => {
     drawParams.showNoise = noiseCB.checked;
   }
@@ -141,7 +140,7 @@ function setupUI(canvasElement){
 
 function loop(){
   requestAnimationFrame(loop);
-  canvas.draw(drawParams);
+  canvas.draw(drawParams, controllerObject._sensitivity);
 
 }
 
