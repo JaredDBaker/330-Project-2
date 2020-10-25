@@ -4,8 +4,8 @@ background-color: whitesmoke;
 
 canvas{
     position: absolute;
-    left:0px;
-    top: 0px;
+    left:20vw;
+    top: 0vh;
 }
 
 #ripples{

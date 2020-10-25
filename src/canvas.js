@@ -77,9 +77,9 @@ function draw(params={}, sensitivity){
                 // data[i+2] is the blue channel    
                 // data[i+3] is the alpha channel
                 data[i] = data[i+1] = data[i+2] = 0;
-                data[i] = 177;
-                data[i + 1] = 177;
-                data[i + 2] = 177;// zero out the red and green and blue channels
+                data[i] = 25;
+                data[i + 1] = 25;
+                data[i + 2] = 25;// zero out the red and green and blue channels
                 // make the red channel 100% red
             } // end if
             if(params.showInvert){
@@ -94,7 +94,7 @@ function draw(params={}, sensitivity){
 
         if(params.showEmboss){
             for(let i = 0; i < length; i++){
-                if(i%4 == 3) continue;
+                if(i%6 == 3) continue;
                 data[i] = 127 + 2*data[i] - data[i+4] - data [i + width * 4];
             }
         }
@@ -113,12 +113,6 @@ function draw(params={}, sensitivity){
                 }
             }
 
-            if(params.showEmboss){
-                for(let i = 0; i < length; i++){
-                    if(i%4 == 3) continue;
-                    data[i] = 127 + 2*data[i] - data[i+4] - data [i + width * 4];
-                }
-            }
             // }
 
         }

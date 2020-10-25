@@ -18,7 +18,7 @@ const drawParams = {
 //use scales to move leaves back and forth over ripples
 const controllerObject = {
 
-    _track      :  DEFAULTS.sound1,
+    _track      :  "./media/TownTheme.mp3",
     _playing    :  "no",
     _showRipples:  true,
     _volume     :  50,
