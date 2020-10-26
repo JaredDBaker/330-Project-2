@@ -41,5 +41,5 @@ const makeColor = (red, green, blue, alpha = 1) => {
       }
       // .. and do nothing if the method is not supported
   };
-  
+
   export {makeColor, getRandomColor, getLinearGradient, goFullscreen};

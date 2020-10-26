@@ -1,6 +1,6 @@
 import * as utils from './utils.js';
 
-let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData;
+let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData, audioData2, radiusize;
 let ctxR, s, buffer1, buffer2, damping, temp;
 
 function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
@@ -15,7 +15,7 @@ function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
 	analyserNode = analyserNodeRef;
 	// this is the array where the analyser data will be stored
     audioData = new Uint8Array(analyserNode.fftSize/2);
-    
+    audioData2 = new Uint8Array(analyserNode.fftSize);
     s = 2;
     buffer1 = Array(canvasWidth).fill().map(_=>Array(canvasHeight).fill(0));
     buffer2 = Array(canvasWidth).fill().map(_=>Array(canvasHeight).fill(0));
@@ -26,7 +26,8 @@ function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
 function draw(params={}, sensitivity){
   // 1 - populate the audioData array with the frequency data from the analyserNode
 	// notice these arrays are passed "by reference" 
-	analyserNode.getByteFrequencyData(audioData);
+    analyserNode.getByteFrequencyData(audioData);
+    analyserNode.getByteTimeDomainData(audioData2);
 	// OR
 	//analyserNode.getByteTimeDomainData(audioData); // waveform data
 	
@@ -36,6 +37,24 @@ function draw(params={}, sensitivity){
     ctx.globalAlpha = .1;
     ctx.fillRect(0,0, canvasWidth, canvasHeight);
     ctx.restore();
+
+    for(let i = 0; i < audioData2.length; i++)
+    {
+        if(audioData2[i] > sensitivity - 30)
+        {
+            //drawCircle(ctx, canvasWidth/2, canvasHeight/2, audioData2[i] * 2);
+            radiusize = audioData2[i] * 1.5;
+        }
+        else{
+            radiusize -= .005;
+        }
+        if(radiusize < 100){
+            radiusize = 100;
+        }
+        drawCircle(ctx, canvasWidth/2, canvasHeight/2, radiusize);
+
+    }
+
 
     // draw dock
     // ctx.save();
@@ -150,5 +169,20 @@ function animation(){
     buffer1 = temp;
     //requestAnimationFrame(animation);
 }
+
+
+const drawCircle = (ctx, x, y, radius, fillStyle="black", lineWidth=0, strokeStyle="black", counterClockWise=false) => {
+    ctx.save();
+    ctx.fillStyle = fillStyle;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2, counterClockWise);
+    ctx.closePath();
+    ctx.fill();
+    if(lineWidth>0){
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = strokeStyle;
+        ctx.stroke();
+    };
+  };
 
 export {setupCanvas,draw};
