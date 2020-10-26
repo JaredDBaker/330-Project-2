@@ -33,7 +33,7 @@ function draw(params={}, sensitivity){
 	
 	// 2 - draw background
     ctx.save();
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "Dodgerblue";
     ctx.globalAlpha = .1;
     ctx.fillRect(0,0, canvasWidth, canvasHeight);
     ctx.restore();
