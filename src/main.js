@@ -18,11 +18,12 @@ const drawParams = {
 //use scales to move leaves back and forth over ripples
 const controllerObject = {
 
-    _track      :  "./media/TownTheme.mp3",
-    _playing    :  "no",
-    _showRipples:  true,
-    _volume     :  50,
-    _sensitivity:  170,
+    _track       :  "./media/TownTheme.mp3",
+    _playing     :  "no",
+    _showRipples :  true,
+    _volume      :  50,
+    _sensitivity :  170,
+    _threshold   :  130,
 
     set track(value){
         audio.loadSoundFile(value);
@@ -54,6 +55,15 @@ const controllerObject = {
       return this._sensitivity;
     },
 
+    set threshold(value){
+      this._threshold = value;
+    },
+
+    get threshold(){
+      return this._threshold;
+    },
+
+
     play(){
         this._playing = playOrPause(this._playing);
     },
@@ -64,12 +74,6 @@ const controllerObject = {
 
 }
 
-// function setupUI(canvasElement)
-// {    
-//     const gui = new dat.GUI({width : 400});
-//     gui.close();
-//     gui.add(controllerObject, 'playing').name("Play");
-// }
 let canvasElement, rippleCanvas;
 function init(){
   audio.setupWebaudio(DEFAULTS.sound1);
@@ -98,7 +102,7 @@ function playOrPause(playing) {
     return playing;
   }
 function Fullscreen(){
-    utils.goFullscreen(canvasElement, rippleCanvas);
+    utils.goFullscreen(canvasElement);
 }
 
 function setupUI(canvasElement){
@@ -112,7 +116,8 @@ function setupUI(canvasElement){
 
     gui.add(controllerObject, 'fullscreen').name("Full Screen");
     gui.add(controllerObject, 'volume', 0, 100).name("Volume");
-    gui.add(controllerObject, 'sensitivity', 100, 250).name("Sensitivity");
+    gui.add(controllerObject, 'sensitivity', 100, 250).name("Ripple Sensitivity");
+    gui.add(controllerObject, 'threshold', 50, 200).name("Circle Sensitivity");
 
   let gradientCB = document.querySelector("#gradientCB");
   let noiseCB = document.querySelector("#noiseCB");
@@ -140,7 +145,7 @@ function setupUI(canvasElement){
 
 function loop(){
   requestAnimationFrame(loop);
-  canvas.draw(drawParams, controllerObject._sensitivity);
+  canvas.draw(drawParams, controllerObject._sensitivity, controllerObject._threshold);
 
 }
 

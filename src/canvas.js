@@ -23,7 +23,7 @@ function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
     radiusSize = 0;
 }
 
-function draw(params={}, sensitivity){
+function draw(params={}, sensitivity, threshold){
   // 1 - populate the audioData array with the frequency data from the analyserNode
 	// notice these arrays are passed "by reference" 
     analyserNode.getByteFrequencyData(audioData);
@@ -40,39 +40,35 @@ function draw(params={}, sensitivity){
 
     for(let i = 0; i < audioData2.length; i++)
     {
-        if(audioData2[i] > sensitivity - 30)
+        if(audioData2[i] > threshold)
         {
             //drawCircle(ctx, canvasWidth/2, canvasHeight/2, audioData2[i] * 2);
-            if(radiusSize > audioData2[i] * 2 + 30){
-                radiusSize++;
+            if(radiusSize < audioData2[i]){
+                radiusSize +=3;
             }
-
             else{
-                radiusSize = audioData2[i] * 2;
+                if(audioData2[i] > radiusSize + 50){
+                    radiusSize = audioData2[i] - 20;
+                }
+                else{
+                    radiusSize = audioData2[i] * 1.5;
+                }
+
             }
 
         }
         else{
-            radiusSize -= .005;
+            radiusSize -= .001;
         }
         if(radiusSize < 100){
             radiusSize = 100;
         }
-        if(radiusSize > 400){
-            radiusSize = 400;
+        if(radiusSize > 300){
+            radiusSize = 300;
         }
         drawCircle(ctx, canvasWidth/2, canvasHeight/2, radiusSize);
-
     }
 
-
-    // draw dock
-    // ctx.save();
-    // ctx.fillStyle = "saddlebrown";
-    // for(let i = 0; i < 4; i++){
-    //     ctx.fillRect(i* canvasWidth/19, canvasHeight/3, canvasWidth/20, canvasHeight/4);
-    // }
-    // ctx.restore();
 		
     //3 - draw gradient
     if(params.showGradient){
@@ -85,14 +81,6 @@ function draw(params={}, sensitivity){
 
     
     // 6 - bitmap manipulation
-        // TODO: right now. we are looping though every pixel of the canvas (320,000 of them!), 
-        // regardless of whether or not we are applying a pixel effect
-        // At some point, refactor this code so that we are looping though the image data only if
-        // it is necessary
-
-        // A) grab all of the pixels on the canvas and put them in the `data` array
-        // `imageData.data` is a `Uint8ClampedArray()` typed array that has 1.28 million elements!
-        // the variable `data` below is a reference to that array 
         let imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
         let data = imageData.data;
         let length = data.length;
@@ -101,10 +89,6 @@ function draw(params={}, sensitivity){
         for(let i = 0; i < length; i+=4){
             // C) randomly change every 20th pixel to red
             if(params.showNoise && Math.random() < .05){
-                // data[i] is the red channel
-                // data[i+1] is the green channel
-                // data[i+2] is the blue channel    
-                // data[i+3] is the alpha channel
                 data[i] = data[i+1] = data[i+2] = 0;
                 data[i] = 25;
                 data[i + 1] = 25;
@@ -168,7 +152,7 @@ function animation(){
 			img.data[index] = buffer2[i][j] - 30;
 			img.data[index+1] = buffer2[i][j] - 30;
 			img.data[index+2] = buffer2[i][j] + 100;
-			img.data[index+3] = 225;
+			img.data[index+3] = 255;
 		}
 	}
 	
@@ -183,6 +167,7 @@ function animation(){
 
 const drawCircle = (ctx, x, y, radius, fillStyle="black", lineWidth=0, strokeStyle="black", counterClockWise=false) => {
     ctx.save();
+    ctx.globalAlpha = .1;
     ctx.fillStyle = fillStyle;
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2, counterClockWise);
