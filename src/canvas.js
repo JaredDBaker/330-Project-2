@@ -1,6 +1,6 @@
 import * as utils from './utils.js';
 
-let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData, audioData2, radiusize;
+let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData, audioData2, radiusSize;
 let ctxR, s, buffer1, buffer2, damping, temp;
 
 function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
@@ -20,7 +20,7 @@ function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
     buffer1 = Array(canvasWidth).fill().map(_=>Array(canvasHeight).fill(0));
     buffer2 = Array(canvasWidth).fill().map(_=>Array(canvasHeight).fill(0));
     damping = .99;
-
+    radiusSize = 0;
 }
 
 function draw(params={}, sensitivity){
@@ -43,15 +43,25 @@ function draw(params={}, sensitivity){
         if(audioData2[i] > sensitivity - 30)
         {
             //drawCircle(ctx, canvasWidth/2, canvasHeight/2, audioData2[i] * 2);
-            radiusize = audioData2[i] * 1.5;
+            if(radiusSize > audioData2[i] * 2 + 30){
+                radiusSize++;
+            }
+
+            else{
+                radiusSize = audioData2[i] * 2;
+            }
+
         }
         else{
-            radiusize -= .005;
+            radiusSize -= .005;
         }
-        if(radiusize < 100){
-            radiusize = 100;
+        if(radiusSize < 100){
+            radiusSize = 100;
         }
-        drawCircle(ctx, canvasWidth/2, canvasHeight/2, radiusize);
+        if(radiusSize > 400){
+            radiusSize = 400;
+        }
+        drawCircle(ctx, canvasWidth/2, canvasHeight/2, radiusSize);
 
     }
 
