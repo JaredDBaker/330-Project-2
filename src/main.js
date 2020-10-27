@@ -137,10 +137,12 @@ function setupUI(){
 
     gui.add(controllerObject, 'fullscreen').name("Full Screen");
     gui.add(controllerObject, 'volume', 0, 100).name("Volume");
-    gui.add(controllerObject, 'showRipples').name("Show Ripples");
-    gui.add(controllerObject, 'sensitivity', 100, 250).name("Ripple Sensitivity");
-    gui.add(controllerObject, 'showCircle').name("Show Circle");
-    gui.add(controllerObject, 'threshold', 50, 200).name("Circle Sensitivity");
+    let ripples = gui.addFolder("Ripples");
+    ripples.add(controllerObject, 'showRipples').name("Show Ripples");
+    ripples.add(controllerObject, 'sensitivity', 100, 250).name("Ripple Sensitivity");
+    let circle = gui.addFolder("Circle");
+    circle.add(controllerObject, 'showCircle').name("Show Circle");
+    circle.add(controllerObject, 'threshold', 50, 200).name("Circle Sensitivity");
 
   let gradientCB = document.querySelector("#gradientCB");
   let noiseCB = document.querySelector("#noiseCB");
