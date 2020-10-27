@@ -1,11 +1,11 @@
 body{font-family:"serif";
-background-color: whitesmoke;
+background-color:skyblue;
 }
 
 canvas{
     position: absolute;
-    left:20vw;
-    top: 0vh;
+    left:24vw;
+    top: 10vh;
 }
 
 #ripples{
@@ -15,4 +15,8 @@ canvas{
 #controls{
     position: relative;
     top: 500px;
+}
+h1{
+    text-align: center;
+
 }

@@ -8,8 +8,7 @@ const DEFAULTS = Object.freeze({
 
 const drawParams = {
   showGradient  :  true,
-  showBars      :  true,
-  showCircles   :  true,
+  showCircle   :  true,
   showNoise     :  false,
   showInvert    : false,
   showEmboss    : false,
@@ -21,9 +20,14 @@ const controllerObject = {
     _track       :  "./media/TownTheme.mp3",
     _playing     :  "no",
     _showRipples :  true,
+    _showCircle  :  true,
     _volume      :  50,
-    _sensitivity :  170,
+    _sensitivity :  180,
     _threshold   :  130,
+    _showGradient:  false,
+    _showNoise   :  false,
+    _showInvert  :  false, 
+    _showEmboss  :  false,
 
     set track(value){
         audio.loadSoundFile(value);
@@ -34,8 +38,26 @@ const controllerObject = {
         return this._track;
     },
 
+    play(){
+        this._playing = playOrPause(this._playing);
+    },
+
     set showRipples(value){
         this._showRipples = value;
+        drawParams.showRipples = value;
+    },
+
+    get showRipples(){
+      return this._showRipples;
+    },
+
+    set showCircle(value){
+      this._showCircle = value;
+      drawParams.showCircle = value;
+    },
+
+    get showCircle(){
+      return this._showCircle;
     },
     
     set volume(value){
@@ -64,9 +86,7 @@ const controllerObject = {
     },
 
 
-    play(){
-        this._playing = playOrPause(this._playing);
-    },
+
 
     fullscreen(){
         Fullscreen();
@@ -79,8 +99,9 @@ function init(){
   audio.setupWebaudio(DEFAULTS.sound1);
   canvasElement = document.querySelector("canvas"); 
   rippleCanvas = document.querySelector("#ripples");// hookup <canvas> element
-  setupUI(canvasElement);
+  setupUI();
   canvas.setupCanvas(canvasElement, rippleCanvas, audio.analyserNode);
+  window.addEventListener('resize', canvas.resize, false);
   loop();
 }
 
@@ -105,7 +126,7 @@ function Fullscreen(){
     utils.goFullscreen(canvasElement);
 }
 
-function setupUI(canvasElement){
+function setupUI(){
   // A - hookup fullscreen button
 
     const gui = new dat.GUI({width : 400});
@@ -116,7 +137,9 @@ function setupUI(canvasElement){
 
     gui.add(controllerObject, 'fullscreen').name("Full Screen");
     gui.add(controllerObject, 'volume', 0, 100).name("Volume");
+    gui.add(controllerObject, 'showRipples').name("Show Ripples");
     gui.add(controllerObject, 'sensitivity', 100, 250).name("Ripple Sensitivity");
+    gui.add(controllerObject, 'showCircle').name("Show Circle");
     gui.add(controllerObject, 'threshold', 50, 200).name("Circle Sensitivity");
 
   let gradientCB = document.querySelector("#gradientCB");

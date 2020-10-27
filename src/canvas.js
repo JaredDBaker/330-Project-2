@@ -7,8 +7,14 @@ function setupCanvas(canvasElement, rippleCanvas,analyserNodeRef){
 	// create drawing context
     ctx = canvasElement.getContext("2d");
     ctxR = rippleCanvas.getContext("2d");
-	canvasWidth = canvasElement.width;
-	canvasHeight = canvasElement.height;
+
+    canvasWidth = Math.floor(window.innerWidth/2);
+    canvasHeight = Math.floor(window.innerWidth/3);
+
+    canvasElement.width = canvasWidth;
+    canvasElement.height = canvasHeight;
+    rippleCanvas.width = canvasWidth;
+    rippleCanvas.height = canvasHeight;
 	// create a gradient that runs top to bottom
 	gradient = utils.getLinearGradient(ctx,0,0,0,canvasHeight,[{percent:1,color:"cyan"}, {percent:.5,color:"lightskyblue"} ,{percent:0,color:"deepskyblue"}]);
 	// keep a reference to the analyser node
@@ -38,36 +44,39 @@ function draw(params={}, sensitivity, threshold){
     ctx.fillRect(0,0, canvasWidth, canvasHeight);
     ctx.restore();
 
-    for(let i = 0; i < audioData2.length; i++)
-    {
-        if(audioData2[i] > threshold)
+    if(params.showCircle){
+        for(let i = 0; i < audioData2.length; i++)
         {
-            //drawCircle(ctx, canvasWidth/2, canvasHeight/2, audioData2[i] * 2);
-            if(radiusSize < audioData2[i]){
-                radiusSize +=3;
-            }
-            else{
-                if(audioData2[i] > radiusSize + 50){
-                    radiusSize = audioData2[i] - 20;
+            if(audioData2[i] > threshold)
+            {
+                //drawCircle(ctx, canvasWidth/2, canvasHeight/2, audioData2[i] * 2);
+                if(radiusSize < audioData2[i]){
+                    radiusSize +=3;
                 }
                 else{
-                    radiusSize = audioData2[i] * 1.5;
+                    if(audioData2[i] > radiusSize + 50){
+                        radiusSize = audioData2[i] - 20;
+                    }
+                    else{
+                        radiusSize = audioData2[i] * 1.5;
+                    }
+
                 }
 
             }
-
+            else{
+                radiusSize -= .001;
+            }
+            if(radiusSize < 100){
+                radiusSize = 100;
+            }
+            if(radiusSize > 300){
+                radiusSize = 300;
+            }
+            drawCircle(ctx, canvasWidth/2, canvasHeight/2, radiusSize);
         }
-        else{
-            radiusSize -= .001;
-        }
-        if(radiusSize < 100){
-            radiusSize = 100;
-        }
-        if(radiusSize > 300){
-            radiusSize = 300;
-        }
-        drawCircle(ctx, canvasWidth/2, canvasHeight/2, radiusSize);
     }
+
 
 		
     //3 - draw gradient
@@ -113,9 +122,9 @@ function draw(params={}, sensitivity, threshold){
         }
 
         ctx.putImageData(imageData, 0, 0);
-
+        animation();
         if(params.showRipples){
-            animation();
+            
             for(let i = 0; i < audioData.length; i++){
                 if(audioData[i] > sensitivity){
                     buffer1[canvasWidth/2][canvasHeight/2] = 60 *  audioData[i];
@@ -129,7 +138,7 @@ function draw(params={}, sensitivity, threshold){
             // }
 
         }
-
+        
         // D) copy image data back to canvas
   
 }
@@ -179,5 +188,7 @@ const drawCircle = (ctx, x, y, radius, fillStyle="black", lineWidth=0, strokeSty
         ctx.stroke();
     };
   };
+
+
 
 export {setupCanvas,draw};
