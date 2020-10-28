@@ -4,7 +4,7 @@ background-color:skyblue;
 
 canvas{
     position: absolute;
-    left:24vw;
+    left:25vw;
     top: 10vh;
 }
 
@@ -12,11 +12,11 @@ canvas{
     opacity: .4;
 }
 
-#controls{
-    position: relative;
-    top: 500px;
+h2{
+    position: absolute;
+    left: 49vw;
+    top: 5vh;
 }
 h1{
     text-align: center;
-
 }

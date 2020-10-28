@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lake Audio Visualizer</title>
+    <title>Ripple Audio Visualizer</title>
     <script type="text/javascript" src="./src/dat.gui.min.js"></script>
 	<script src="./src/loader.js" type="module"></script>
 	<link rel="stylesheet" href ="styles/default-style.css"> 
 </head>
-<body>
+<header>
 	<h1>Ripple To the Beat</h1>
-	 <canvas width="1000" height="500"></canvas>
-	 <canvas id ="ripples"width="1000" height="500"></canvas>
-
-	<section id = "controls">
-		<span><input type="checkbox" id="gradientCB"><label for="gradientCB">Show Gradient</label></span>
-		<span><input type="checkbox" id="noiseCB"><label for="noiseCB">Show Noise</label></span>
-		<span><input type="checkbox" id="invertCB"><label for="invertCB">Invert Colors</label></span>
-		<span><input type="checkbox" id="embossCB"><label for="embossCB">Show Emboss</label></span>
-	  </section>
+</header>
+<body>
+	<canvas ></canvas>
+	<canvas id ="ripples"></canvas>
 </body>
+<footer>
+	<h2 id = "time-display">current time / duration</h2>
+</footer>
 </html>
